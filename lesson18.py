@@ -1,37 +1,32 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, render_template, redirect, url_for
 from sqlalchemy import exc
-from crud import get_note, create_note
+from crud import get_note, create_note, get_all_notes
 from models import create_tables, drop_tables
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+    static_url_path="/static/",
+)
 
 drop_tables()
 create_tables()
 
 
-@app.route('/', methods=["GET"])
-def get_register_view():
-    return (
-        "<h1> Создание новой анонимной записи </h1>"
-        '<form action="/" method="post">'
-        '   <p> Title: <input type="text" name="title"> </p>'
-        '   <p> Content: <input type="text" name="content"> </p>'
-        '   <p> <input type="submit"> </p>'
-        '</form>'
-    )
+@app.route('/publish', methods=["GET"])
+def get_publish_view():
+    return render_template("publish_form.html")
 
 
-@app.route('/', methods=["POST"])
-def register_note_view():
+@app.route('/publish', methods=["POST"])
+def publish_note_view():
     note_data = request.form
     note = create_note(
         title=note_data["title"],
         content=note_data["content"]
     )
-    return f"""
-        <h1> Новая запись успешно создана! </h1>
-        <p> UUID: {note.uuid} </p>
-    """
+    return redirect(url_for("notes_view", note_uuid=note.uuid))
 
 
 @app.route('/<note_uuid>', methods=["GET"])
@@ -40,9 +35,16 @@ def notes_view(note_uuid: str):
         note = get_note(note_uuid)
     except exc.NoResultFound:
         return Response("Идентификатор не найден!", status=404)
-    return f"""
-    <h1> Вы открыли запись с идентификатором {note.uuid} </h1>
-    <p> Title: {note.title} </p>
-    <p> Content: {note.content} </p>
-    <p> Created at: {note.created_at} </p>
-    """
+    return render_template(
+        "note.html",
+        note_uuid=note.uuid,
+        title=note.title,
+        content=note.content,
+        created_at=note.created_at
+    )
+
+
+@app.route("/", methods=["GET"])
+def home_page_view():
+    all_notes = get_all_notes()
+    return render_template("home.html", notes=all_notes)

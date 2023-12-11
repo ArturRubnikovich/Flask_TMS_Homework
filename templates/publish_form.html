@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Опубликование записи</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/publish.css">
+</head>
+<body>
+    <h1 class="header">Опубликование записи</h1>
+
+    <form action="/publish" method="post">
+        <!-- Блок title -->
+        <div class="input-block">
+            <span>Title</span>
+            <div>
+                <label>
+                    <input class="input-form" name="title" type="text">
+                </label>
+            </div>
+        </div>
+
+        <!-- Блок content -->
+        <div class="input-block">
+            <span>Content</span>
+            <div>
+                <label>
+                    <textarea rows="8" cols="40" name="content"></textarea>
+                </label>
+            </div>
+        </div>
+
+        <!-- Блок кнопки -->
+        <div class="input-block">
+            <input class="form-button" type="submit" value="Опубликовать">
+        </div>
+    </form>
+
+
+</body>
+</html>

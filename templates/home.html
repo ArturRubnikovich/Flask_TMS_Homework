@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <h1 class="header">
+        Тестовое приложение Flask по созданию анонимных записей
+    </h1>
+
+    <div style="padding-top: 20px;">
+        <a href="/publish">Опубликовать</a>
+    </div>
+
+    <div class="content">
+
+        {% for note in notes %}
+            <div class="card">
+                <h3>
+                    <a href="/{{ note_uuid }}">{{ note.uuid }}</a>
+                </h3>
+                <div>
+                    <div> Title: {{ note.title }} </div>
+                    <div> Content: {{ note.content }} </div>
+                    <div> Created at: {{ note.created_at }} </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+</body>
+</html>
+

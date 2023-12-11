@@ -15,3 +15,8 @@ def create_note(title: str, content: str) -> Note:
         conn.commit()
         conn.refresh(note)
     return note
+
+
+def get_all_notes() -> list[Note]:
+    with session() as conn:
+        return conn.execute(select(Note)).scalars().all()
